@@ -7,10 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.bean.Register;
 import com.example.demo.bean.User;
 import com.example.demo.bean.UserRepo;
-import com.example.demo.bean.User_Register;
-import com.example.demo.bean.Blog;
 
 @Controller
 public class MyController {
@@ -18,35 +17,43 @@ public class MyController {
 	@Autowired
 	private UserRepo repo;
 
-    @GetMapping("/addUser")
-    public String sendForm(User user) {
+    @GetMapping("/RegisterPage")
+    public String sendForm(Register register) {
     	System.out.println("Bloodworm");
-        return "addUser";
+        return "RegisterPage";
     }
-
-    @PostMapping("/addUser")
-    public String processForm(User user) {
-    	List<Blog> blogg = repo.findByTitle(user.getName());
-    	for(Blog oneblog : blogg) {
-    		if(oneblog.getContent().equals(user.getOccupation())) {
-    			System.out.println(oneblog.getId());
-            	System.out.println(oneblog.getTitle());
-            	System.out.println(oneblog.getContent());
+    @PostMapping("/createUser")
+    public String createUser(Register register) {
+    	User user = new User(register.getFirst(),register.getSecond(),register.getEmail(),register.getPhone(),register.getPassword(),0);
+    	repo.save(user);
+    	System.out.println("Goldfish");
+    	return "showMessage";
+    }
+    @GetMapping("/LoginPage")
+    public String enterLoginPage(Register register) {
+    	System.out.println("Bloodhorn");
+    	return "LoginPage";
+    }
+    @PostMapping("/Panel")
+    public String checkLogin(Register register) {
+    	List<User> userList = repo.findByemail(register.getEmail());
+    	for(User oneblog : userList) {
+    		if(oneblog.getPassword().equals(register.getPassword())) {
+    			System.out.println("Succesful login");
+    			register.setFirst(oneblog.getFirstname());
+    			return "Panel";
     		}
     	}
-    	return "showMessage";
+    	System.out.println("Wrong Password");
+		return "LoginPage";
     }
-    
-    @PostMapping("/createUser")
-    public String createUser(User user) {
-    	Blog blog = new Blog(user.getName(),user.getOccupation());
-    	repo.save(blog);
-    	return "showMessage";
+    @GetMapping("/Panel")
+    public String refreshPanel(Register register) {
+    	if(register.getEmail() == null) {
+    		return "LoginPage";
+    	}
+    	else {
+    		return "Panel";
+    	}
     }
-    
-    @PostMapping("/createUserFr")
-    public String createUserFr(User_Register register) {
-    	return "";
-    }
-    
 }
