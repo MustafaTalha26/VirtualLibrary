@@ -14,28 +14,33 @@ public class Author{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int aid;
 	
-	private String photourl;
+	private String photo;
 	private String name;
-	private String born;
-	private String died;
+	private String birth;
+	private String death;
+
 	
-	public Author(String photourl, String name, String born, String died) {
-		super();
-		this.photourl = photourl;
-		this.name = name;
-		this.born = born;
-		this.died = died;
+	public Author() {
+		
 	}
-	
-	public Author(int aid, String photourl, String name, String born, String died) {
+
+	public Author(String photo, String name, String birth, String death) {
+		super();
+		this.photo = photo;
+		this.name = name;
+		this.birth = birth;
+		this.death = death;
+	}
+
+	public Author(int aid, String photo, String name, String birth, String death) {
 		super();
 		this.aid = aid;
-		this.photourl = photourl;
+		this.photo = photo;
 		this.name = name;
-		this.born = born;
-		this.died = died;
+		this.birth = birth;
+		this.death = death;
 	}
-	
+
 	public int getAid() {
 		return aid;
 	}
@@ -44,14 +49,14 @@ public class Author{
 		this.aid = aid;
 	}
 	
-	public String getPhotourl() {
-		return photourl;
+	public String getPhoto() {
+		return photo;
 	}
-	
-	public void setPhotourl(String photourl) {
-		this.photourl = photourl;
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -59,21 +64,21 @@ public class Author{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public String getBorn() {
-		return born;
+
+	public String getBirth() {
+		return birth;
 	}
-	
-	public void setBorn(String born) {
-		this.born = born;
+
+	public void setBirth(String birth) {
+		this.birth = birth;
 	}
-	
-	public String getDied() {
-		return died;
+
+	public String getDeath() {
+		return death;
 	}
-	
-	public void setDied(String died) {
-		this.died = died;
+
+	public void setDeath(String death) {
+		this.death = death;
 	}
 	
 }

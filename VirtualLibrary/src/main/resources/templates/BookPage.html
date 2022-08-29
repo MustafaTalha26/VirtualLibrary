@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<head>
+	<meta charset="UTF-8">
+	<title>UserPanel</title>
+</head>
+<body>
+	<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/Panel}">Try out</a>
+            
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a class="nav-link" th:href="@{/RegisterPage}">Register Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/LoginPage}">Login Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/BookPage}">Book Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/AuthorPage}">Author Page</a></li>
+        </ul>
+    </div>    
+</nav>
+<div style="height: 10px;"></div>
+<form th:action="@{/BookPageType}">
+	<button type="submit" class="btn btn-success">type</button>
+</form>
+<div class="container">
+	<div style="margin: auto; width: 600px" class="row">
+		<table>
+    		<thead>
+        	<tr>
+        		<th>  </th>
+            	<th> Title </th>
+       	     	<th> Page </th>
+       	     	<th> Type </th>
+       		</tr>
+   			</thead>
+    		<tbody>
+        		<tr th:each="booker : ${books}">
+        			<td><img th:src="${booker.book.image}" width="120" height="160"/></td>
+            		<td><span th:text="${booker.book.name}"> Title </span></td>
+            		<td><span th:text="${booker.book.page}"> Page </span></td>
+            		<td><span th:text="${booker.type}"> Page </span></td>
+        		</tr>
+    		</tbody>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>

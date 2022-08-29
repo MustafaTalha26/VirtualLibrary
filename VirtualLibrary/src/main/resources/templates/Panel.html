@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <head>
-    <title>Show message</title>
+    <title>UserPanel</title>
     <meta charset="UTF-8">
 </head>
 <body>
@@ -13,9 +13,13 @@
             
         </div>
         <ul class="nav navbar-nav">
-            <li><a class="nav-link" th:href="@{/RegisterPage}">RegisterPage</a></li>
+            <li><a class="nav-link" th:href="@{/RegisterPage}">Register Page</a></li>
             
-            <li><a class="nav-link" th:href="@{/LoginPage}">LoginPage</a></li>
+            <li><a class="nav-link" th:href="@{/LoginPage}">Login Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/BookPage}">Book Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/AuthorPage}">Author Page</a></li>
         </ul>
     </div>    
 </nav>
