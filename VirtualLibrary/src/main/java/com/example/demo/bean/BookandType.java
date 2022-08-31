@@ -1,9 +1,8 @@
 package com.example.demo.bean;
 
-public class BookandType {
+public class BookandType{
 	private Book book;
 	private String type;
-	
 	
 	public BookandType() {
 	}
@@ -13,6 +12,40 @@ public class BookandType {
 		this.type = type;
 	}
 	
+	public BookandType(Book book) {
+		this.book = book;
+		String type = "";
+		
+		if(book.getScifi() == 1) {
+			type += "Sci-Fi, ";
+		}
+		if(book.getDetective() == 1) {
+			type += "Detective, ";
+		}
+		if(book.getComic() == 1) {
+			type += "Comic, ";
+		}
+		if(book.getCook() == 1) {
+			type += "Cookbook, ";
+		}
+		if(book.getEducation() == 1) {
+			type += "Education, ";
+		}
+		if(book.getHistory() == 1) {
+			type += "History, ";
+		}
+		if(book.getLiterature() == 1) {
+			type += "Literature, ";
+		}
+		if(book.getPhilosophy() == 1) {
+			type += "Philosophy, ";
+		}
+		if(!type.equals("")) {
+    		type = type.substring(0, type.length()-2);
+		}
+		this.type = type;
+	}
+
 	public Book getBook() {
 		return book;
 	}
@@ -24,22 +57,5 @@ public class BookandType {
 	}
 	public void setType(String type) {
 		this.type = type;
-	}
-	
-	
-	//When I find a better usage I am going to change it.
-	public String createType() {
-		String type = "";
-		if(book.getScifi() == 1) {
-			type += "Sci-Fi, ";
-		}
-		if(book.getDetective() == 1) {
-			type += "Detective, ";
-		}
-		if(!type.equals("")) {
-    		type = type.substring(0, type.length()-2);
-		}
-		this.type = type;
-		return type;
 	}
 }

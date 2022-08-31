@@ -8,9 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.example.demo.bean.Admin;
+import com.example.demo.bean.AdminRepo;
 import com.example.demo.bean.Author;
 import com.example.demo.bean.AuthorRepo;
 import com.example.demo.bean.Book;
@@ -32,6 +35,9 @@ public class MyController {
 	
 	@Autowired
 	private AuthorRepo autrepo;
+	
+	@Autowired
+	private AdminRepo adminrepo;
 
     @GetMapping("/RegisterPage")
     public String sendForm(Register register,SessionStatus status) {
@@ -52,8 +58,20 @@ public class MyController {
     @PostMapping("/Panel")
     public String checkLogin(Register register) {
     	List<User> userList = repo.findByemail(register.getEmail());
+    	List<Admin> admins = adminrepo.findAll();
     	for(User oneblog : userList) {
     		if(oneblog.getPassword().equals(register.getPassword())) {
+    			for(Admin admin : admins) {
+    				if(oneblog.getLid() == admin.getUserid()) {
+    					register.setFirst(oneblog.getFirstname());
+    	    			register.setSecond(oneblog.getLastname());
+    	    			register.setPhone(oneblog.getPhonenumber());
+    	    			register.setTerm(oneblog.getTerm());
+    	    			register.setAdmin(1);
+    	    			System.out.println("Succesful login");
+    	    			return "AdminPanel";
+    				}
+    			}
     			register.setFirst(oneblog.getFirstname());
     			register.setSecond(oneblog.getLastname());
     			register.setPhone(oneblog.getPhonenumber());
@@ -82,42 +100,43 @@ public class MyController {
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
     	for(Book book : books) {
-    		String type = "";
-    		if(book.getScifi() == 1) {
-    			type += "Sci-Fi, ";
-    		}
-    		if(book.getDetective() == 1) {
-    			type += "Detective, ";
-    		}
-    		if(!type.equals("")) {
-        		type = type.substring(0, type.length()-2);
-    		}
-    		full.add(new BookandType(book,type));
+    		full.add(new BookandType(book));
     	}
     	model.addAttribute("books",full);
     	return "BookPage";
     }
     
-    @GetMapping("/BookPageType")
-    public String getTypedBookPage(Register register,Model model) {
+    @PostMapping("/BookPageType")
+    public String getTypedBookPage(Register register,Model model,@RequestParam(value="type", required=true) String type) {
     	if(register.getEmail() == null) {
     		return "LoginPage";
     	}
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
     	for(Book book : books) {
-    		String type = "";
-    		if(book.getScifi() == 1) {
-    			type += "Sci-Fi, ";
+    		if(book.getScifi() == 1 && type.equals("scifi")) {
+    			full.add(new BookandType(book));
     		}
-    		if(book.getDetective() == 1) {
-    			type += "Detective, ";
+    		if(book.getDetective() == 1 && type.equals("detective")) {
+    			full.add(new BookandType(book));
     		}
-    		if(!type.equals("")) {
-        		type = type.substring(0, type.length()-2);
+    		if(book.getComic() == 1 && type.equals("comic")) {
+    			full.add(new BookandType(book));
     		}
-    		if(book.getScifi() == 1) {
-    			full.add(new BookandType(book,type));
+    		if(book.getCook() == 1 && type.equals("cook")) {
+    			full.add(new BookandType(book));
+    		}
+    		if(book.getEducation() == 1 && type.equals("education")) {
+    			full.add(new BookandType(book));
+    		}
+    		if(book.getHistory() == 1 && type.equals("history")) {
+    			full.add(new BookandType(book));
+    		}
+    		if(book.getLiterature() == 1 && type.equals("literature")) {
+    			full.add(new BookandType(book));
+    		}
+    		if(book.getPhilosophy() == 1 && type.equals("philosophy")) {
+    			full.add(new BookandType(book));
     		}
     	}
     	model.addAttribute("books",full);
@@ -132,5 +151,56 @@ public class MyController {
     	List<Author> auths = autrepo.findAll();
     	model.addAttribute("auths",auths);
     	return "AuthorPage";
+    }
+    @GetMapping("/AdminPanel")
+    public String goToAdminPanel(Register register) {
+    	if(register.getAdmin() == 1) {
+    		return "AdminPanel";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @GetMapping("/AddBook")
+    public String goToAddBook(Register register,Model model) {
+    	if(register.getAdmin() == 1) {
+    		model.addAttribute("book", new Book());
+    		return "AddBook";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @PostMapping("/addBookFr")
+    public String createBook(Register register,Book book) {
+    	if(register.getAdmin() == 1) {
+    		bookrepo.save(book);
+        	System.out.println("Succesfully added");
+    		return "BookPage";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @GetMapping("/AddAuthor")
+    public String goToAddAuthor(Register register,Model model) {
+    	if(register.getAdmin() == 1) {
+    		model.addAttribute("book", new Author());
+    		return "AddAuthor";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @PostMapping("/addAuthorFr")
+    public String createAuthor(Register register,Author author) {
+    	if(register.getAdmin() == 1) {
+    		autrepo.save(author);
+        	System.out.println("Succesfully added");
+    		return "AuthorPage";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
     }
 }

@@ -7,6 +7,7 @@ public class Register {
 	private String phone;
 	private String password;
 	private int term;
+	private int admin;
 	
 	public Register() {}
 
@@ -57,6 +58,12 @@ public class Register {
 	public void setTerm(int term) {
 		this.term = term;
 	}
-	
-	
+
+	public int getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(int admin) {
+		this.admin = admin;
+	}
 }

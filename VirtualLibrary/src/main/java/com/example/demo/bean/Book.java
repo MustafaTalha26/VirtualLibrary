@@ -1,7 +1,5 @@
 package com.example.demo.bean;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -51,6 +49,22 @@ public class Book {
 	public Book(int bid, String name, String image, int aid, int page, int scifi, int comic, int literature,
 			int philosophy, int education, int detective, int history, int cook) {
 		this.bid = bid;
+		this.name = name;
+		this.image = image;
+		this.aid = aid;
+		this.page = page;
+		this.scifi = scifi;
+		this.comic = comic;
+		this.literature = literature;
+		this.philosophy = philosophy;
+		this.education = education;
+		this.detective = detective;
+		this.history = history;
+		this.cook = cook;
+	}
+
+	public Book(String name, String image, int aid, int page, int scifi, int comic, int literature, int philosophy,
+			int education, int detective, int history, int cook) {
 		this.name = name;
 		this.image = image;
 		this.aid = aid;

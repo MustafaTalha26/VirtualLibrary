@@ -24,8 +24,15 @@
     </div>    
 </nav>
 <div style="height: 10px;"></div>
-<form th:action="@{/BookPageType}">
-	<button type="submit" class="btn btn-success">type</button>
+<form style="text-align: center;" th:action="@{/BookPageType}" method="post">
+	<button type="submit" name="type" value="scifi">Sci-Fi</button>
+    <button type="submit" name="type" value="detective">Detective</button>
+    <button type="submit" name="type" value="comic">Comic</button>
+    <button type="submit" name="type" value="cook">Cookbook</button>
+    <button type="submit" name="type" value="education">Education</button>
+    <button type="submit" name="type" value="history">History</button>
+    <button type="submit" name="type" value="literature">Literature</button>
+    <button type="submit" name="type" value="philosophy">Philosophy</button>
 </form>
 <div class="container">
 	<div style="margin: auto; width: 600px" class="row">
@@ -43,7 +50,7 @@
         			<td><img th:src="${booker.book.image}" width="120" height="160"/></td>
             		<td><span th:text="${booker.book.name}"> Title </span></td>
             		<td><span th:text="${booker.book.page}"> Page </span></td>
-            		<td><span th:text="${booker.type}"> Page </span></td>
+            		<td><span th:text="${booker.type}"> Type </span></td>    		
         		</tr>
     		</tbody>
 		</table>

@@ -8,7 +8,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "authors")
-
 public class Author{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +24,6 @@ public class Author{
 	}
 
 	public Author(String photo, String name, String birth, String death) {
-		super();
 		this.photo = photo;
 		this.name = name;
 		this.birth = birth;
@@ -33,7 +31,6 @@ public class Author{
 	}
 
 	public Author(int aid, String photo, String name, String birth, String death) {
-		super();
 		this.aid = aid;
 		this.photo = photo;
 		this.name = name;
