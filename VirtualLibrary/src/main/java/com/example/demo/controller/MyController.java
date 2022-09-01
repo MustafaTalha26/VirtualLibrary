@@ -67,6 +67,7 @@ public class MyController {
     	    			register.setSecond(oneblog.getLastname());
     	    			register.setPhone(oneblog.getPhonenumber());
     	    			register.setTerm(oneblog.getTerm());
+    	    			register.setLid(oneblog.getLid());
     	    			register.setAdmin(1);
     	    			System.out.println("Succesful login");
     	    			return "AdminPanel";
@@ -76,6 +77,7 @@ public class MyController {
     			register.setSecond(oneblog.getLastname());
     			register.setPhone(oneblog.getPhonenumber());
     			register.setTerm(oneblog.getTerm());
+    			register.setLid(oneblog.getLid());
     			System.out.println("Succesful login");
     			return "Panel";
     		}
@@ -89,7 +91,12 @@ public class MyController {
     		return "LoginPage";
     	}
     	else {
-    		return "Panel";
+    		if(register.getAdmin() == 1) {
+    			return "AdminPanel";
+    		}
+    		else {
+    			return "Panel";
+    		}
     	}
     }
     @GetMapping("/BookPage")
@@ -100,7 +107,9 @@ public class MyController {
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
     	for(Book book : books) {
-    		full.add(new BookandType(book));
+    		if(book.getBorrower() == 0) {
+    			full.add(new BookandType(book));
+    		}
     	}
     	model.addAttribute("books",full);
     	return "BookPage";
@@ -114,29 +123,31 @@ public class MyController {
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
     	for(Book book : books) {
-    		if(book.getScifi() == 1 && type.equals("scifi")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getDetective() == 1 && type.equals("detective")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getComic() == 1 && type.equals("comic")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getCook() == 1 && type.equals("cook")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getEducation() == 1 && type.equals("education")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getHistory() == 1 && type.equals("history")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getLiterature() == 1 && type.equals("literature")) {
-    			full.add(new BookandType(book));
-    		}
-    		if(book.getPhilosophy() == 1 && type.equals("philosophy")) {
-    			full.add(new BookandType(book));
+    		if(book.getBorrower() == 0) {
+    			if(book.getScifi() == 1 && type.equals("scifi")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getDetective() == 1 && type.equals("detective")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getComic() == 1 && type.equals("comic")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getCook() == 1 && type.equals("cook")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getEducation() == 1 && type.equals("education")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getHistory() == 1 && type.equals("history")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getLiterature() == 1 && type.equals("literature")) {
+        			full.add(new BookandType(book));
+        		}
+        		if(book.getPhilosophy() == 1 && type.equals("philosophy")) {
+        			full.add(new BookandType(book));
+        		}
     		}
     	}
     	model.addAttribute("books",full);
@@ -202,5 +213,60 @@ public class MyController {
     	else {
     		return "LoginPage";
     	}
+    }
+    @GetMapping("/UpdateBook")
+    public String goToUpdateBook(Register register,Model model) {
+    	if(register.getAdmin() == 1) {
+    		model.addAttribute("book", new Book());
+    		model.addAttribute("books", bookrepo.findAll());
+    		return "UpdateBook";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @PostMapping("/updateBookFr")
+    public String updateBook(Register register,Book book,Book chosen) {
+    	if(register.getAdmin() == 1) {
+    		book.setBid(chosen.getBid());
+    		bookrepo.save(book);
+    		return "BookPage";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @GetMapping("/UpdateAuthor")
+    public String goToUpdateAuthor(Register register,Model model) {
+    	if(register.getAdmin() == 1) {
+    		model.addAttribute("author", new Author());
+    		model.addAttribute("authors", autrepo.findAll());
+    		return "UpdateAuthor";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @PostMapping("/updateAuthorFr")
+    public String updateAuthor(Register register,Author author,Author chosen) {
+    	if(register.getAdmin() == 1) {
+    		author.setAid(chosen.getAid());
+    		autrepo.save(author);
+    		return "AuthorPage";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @PostMapping("/borrowBook")
+    public String borrowBook(Register register,Book book) {
+    	System.out.println(book.getName());
+		return "Panel";
+    }
+    @PostMapping("/returnBook")
+    public String returnBook(Register register,Book book) {
+    	book.setBorrower(0);
+    	bookrepo.save(book);
+		return "Panel";
     }
 }

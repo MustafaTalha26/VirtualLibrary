@@ -26,8 +26,14 @@
 </nav>
 <div style="height: 10px;"></div>
 <div class="container">
-	<form style="margin: auto; width: 450px" class="my-5" th:action="@{/addAuthorFr}" th:object="${author}" method="post">
-    	<h3 style="color:red">Add Author to Library</h3>
+	<form style="margin: auto; width: 450px" class="my-5" th:action="@{/updateAuthorFr}" th:object="${author}" method="post">
+    	<h3 style="color:red">Update to Library</h3>
+    	<div class="row my-1">
+    	<select class="form-control selectpicker"  th:field="*{aid}" id="aid">
+    		<option value="0">Select author to update</option>
+    		<option th:each="chosen : ${authors}" th:value="${chosen.aid}" th:text="${chosen.name}"></option>
+		</select>
+		</div>
     	<div class="row my-1">
     		<div class="col">
     			<label>Name:</label>
@@ -60,7 +66,7 @@
     			<input type="text" th:field="*{death}"/>
     		</div>
     	</div>
-		<button type="submit" class="btn btn-success">Add Author</button>
+		<button type="submit" class="btn btn-success">Update Author</button>
 	</form>
 </div>
 </body>

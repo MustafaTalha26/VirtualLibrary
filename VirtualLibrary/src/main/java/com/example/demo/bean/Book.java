@@ -27,6 +27,8 @@ public class Book {
 	private int history;
 	private int cook;
 	
+	private int borrower;
+	
 	public Book() {
 		
 	}
@@ -156,5 +158,11 @@ public class Book {
 	}
 	public void setCook(int cook) {
 		this.cook = cook;
+	}
+	public int getBorrower() {
+		return borrower;
+	}
+	public void setBorrower(int borrower) {
+		this.borrower = borrower;
 	}
 }

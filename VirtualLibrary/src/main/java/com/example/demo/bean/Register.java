@@ -8,6 +8,7 @@ public class Register {
 	private String password;
 	private int term;
 	private int admin;
+	private int lid;
 	
 	public Register() {}
 
@@ -65,5 +66,13 @@ public class Register {
 
 	public void setAdmin(int admin) {
 		this.admin = admin;
+	}
+
+	public int getLid() {
+		return lid;
+	}
+
+	public void setLid(int lid) {
+		this.lid = lid;
 	}
 }
