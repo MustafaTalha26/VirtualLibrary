@@ -27,29 +27,26 @@
 </nav>
 <div style="height: 10px;"></div>
 <div class="container">
-	<div style="margin: auto; width: 400px" class="row">
-		<div class="row my-1">
-			<p class="col">First Name:</p>
-			<p class="col" th:text="${register.first}"></p>
+	<form style="margin: auto; width: 450px" class="my-5" th:action="@{/removeAuthor}" th:object="${author}" method="post">
+    	<h3 style="color:red">Update to Library</h3>
+    	<div class="row my-1">
+    	<select class="form-control selectpicker"  th:field="*{aid}" id="aid">
+    		<option value="0">Select author to delete</option>
+    		<option th:each="chosen : ${authors}" th:value="${chosen.aid}" th:text="${chosen.name}"></option>
+		</select>
 		</div>
-		<div class="row my-1">
-			<p class="col">Second Name:</p>
-			<p class="col" th:text="${register.second}"></p>
+		<button type="submit" class="btn btn-success">Delete Author</button>
+	</form>
+	<div style="height: 20px;"></div>
+	<form style="margin: auto; width: 450px" class="my-5" th:action="@{/removeBook}" th:object="${book}" method="post">
+    	<div class="row my-1">
+    	<select class="form-control selectpicker"  th:field="*{bid}" id="bid">
+    		<option value="0">Select book to delete</option>
+    		<option th:each="chosen : ${books}" th:value="${chosen.bid}" th:text="${chosen.name}"></option>
+		</select>
 		</div>
-		<div class="row my-1">
-			<p class="col">Email:</p>
-			<p class="col" th:text="${register.email}"></p>
-		</div>
-		<div class="row my-1">
-			<p class="col">Phone:</p>
-			<p class="col" th:text="${register.phone}"></p>
-		</div>
-		<div class="row my-1">
-			<p class="col">Penalty:</p>
-			<p class="col" th:text="${register.term}"></p>
-		</div>
-	</div>
+		<button type="submit" class="btn btn-success">Delete Book</button>
+	</form>
 </div>
 </body>
 </html>
-

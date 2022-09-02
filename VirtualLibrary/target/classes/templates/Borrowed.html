@@ -31,18 +31,19 @@
 		<table>
     		<thead>
         	<tr>
-        		<th> </th>
-            	<th> Name </th>
-       	     	<th> Born </th>
-       	     	<th> Died </th>
+        		<th>  </th>
+            	<th> Title </th>
+       	     	<th> Page </th>
+       	     	<th> Type </th>
        		</tr>
    			</thead>
     		<tbody>
-        		<tr th:each="book : ${auths}">
-        			<td><img th:src="${book.photo}" width="120" height="160"/></td>
-            		<td><span th:text="${book.name}"> Title </span></td>
-            		<td><span th:text="${book.birth}"> Born </span></td>
-            		<td><span th:text="${book.death}"> Died </span></td>
+        		<tr th:each="booker : ${books}">
+        			<td><img th:src="${booker.book.image}" width="120" height="160"/></td>
+            		<td><span th:text="${booker.book.name}"> Title </span></td>
+            		<td><span th:text="${booker.book.page}"> Page </span></td>
+            		<td><span th:text="${booker.type}"> Type </span></td>  
+            		<td><a th:href="@{'/returnBook/' + ${booker.book.bid}}" class="btn btn-info">Return</a></td> 		
         		</tr>
     		</tbody>
 		</table>

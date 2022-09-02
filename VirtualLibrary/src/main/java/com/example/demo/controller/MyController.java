@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -196,7 +197,7 @@ public class MyController {
     @GetMapping("/AddAuthor")
     public String goToAddAuthor(Register register,Model model) {
     	if(register.getAdmin() == 1) {
-    		model.addAttribute("book", new Author());
+    		model.addAttribute("author", new Author());
     		return "AddAuthor";
     	}
     	else {
@@ -258,15 +259,64 @@ public class MyController {
     		return "LoginPage";
     	}
     }
-    @PostMapping("/borrowBook")
-    public String borrowBook(Register register,Book book) {
-    	System.out.println(book.getName());
+    @GetMapping("/borrowBook/{id}")
+    public String borrowBook(Register register,@PathVariable(name="id")int id) {
+    	List<Book> books = bookrepo.findAll();
+    	for(Book book : books) {
+    		if(book.getBid() == id) {
+    			book.setBorrower(register.getLid());
+    			bookrepo.save(book);
+    		}
+    	}
 		return "Panel";
     }
-    @PostMapping("/returnBook")
-    public String returnBook(Register register,Book book) {
-    	book.setBorrower(0);
-    	bookrepo.save(book);
+    @GetMapping("/Borrowed")
+    public String goToBorrowed(Register register,Model model) {
+    	if(register.getEmail() == null) {
+    		return "LoginPage";
+    	}
+    	List<Book> books = bookrepo.findAll();
+    	List<BookandType> full = new ArrayList<>();
+    	for(Book book : books) {
+    		if(book.getBorrower() == register.getLid()) {
+    			full.add(new BookandType(book));
+    		}
+    	}
+    	model.addAttribute("books",full);
+    	return "Borrowed";
+    }
+    @GetMapping("/returnBook/{id}")
+    public String returnBook(Register register,@PathVariable(name="id")int id) {
+    	List<Book> books = bookrepo.findAll();
+    	for(Book book : books) {
+    		if(book.getBid() == id) {
+    			book.setBorrower(0);
+    			bookrepo.save(book);
+    		}
+    	}
 		return "Panel";
+    }
+    @GetMapping("/Removal")
+    public String goToRemoval(Register register,Model model) {
+    	if(register.getAdmin() == 1) {
+    		model.addAttribute("author", new Author());
+    		model.addAttribute("authors", autrepo.findAll());
+    		model.addAttribute("book", new Book());
+    		model.addAttribute("books", bookrepo.findAll());
+    		return "Removal";
+    	}
+    	else {
+    		return "LoginPage";
+    	}
+    }
+    @PostMapping("/removeAuthor")
+    public String removeAuthor(Register register, Author chosen) {
+    	autrepo.deleteById(chosen.getAid());
+    	return "AdminPanel";
+    }
+    @PostMapping("/removeBook")
+    public String removeBook(Register register, Book chosen) {
+    	bookrepo.deleteById(chosen.getBid());
+    	return "AdminPanel";
     }
 }

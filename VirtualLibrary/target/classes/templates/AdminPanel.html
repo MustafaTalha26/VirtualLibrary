@@ -21,6 +21,7 @@
             
             <li><a class="nav-link" th:href="@{/AuthorPage}">Author Page</a></li>
             
+            <li><a class="nav-link" th:href="@{/Borrowed}">Borrowed Books</a></li>
         </ul>
     </div>    
 </nav>
@@ -38,6 +39,9 @@
 		</div>
 		<div class="row my-1">
 			<a th:href="@{/UpdateAuthor}" type="button" class="btn btn-primary btn-lg btn-block">Update Author</a>
+		</div>
+		<div class="row my-1">
+			<a th:href="@{/Removal}" type="button" class="btn btn-primary btn-lg btn-block">Remove Book and Author</a>
 		</div>
 	</div>
 </div>

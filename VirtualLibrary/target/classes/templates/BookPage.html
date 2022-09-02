@@ -20,6 +20,8 @@
             <li><a class="nav-link" th:href="@{/BookPage}">Book Page</a></li>
             
             <li><a class="nav-link" th:href="@{/AuthorPage}">Author Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/Borrowed}">Borrowed Books</a></li>
         </ul>
     </div>    
 </nav>
@@ -51,11 +53,7 @@
             		<td><span th:text="${booker.book.name}"> Title </span></td>
             		<td><span th:text="${booker.book.page}"> Page </span></td>
             		<td><span th:text="${booker.type}"> Type </span></td>  
-            		<td>
-            			<form th:action="@{/borrowBook}" th:object="${book}" th:value="${booker.book}" method="post">
-            				<input type="submit" value="Submit" class="btn btn-success" />
-            			</form>
-            		</td>     		
+            		<td><a th:href="@{'/borrowBook/' + ${booker.book.bid}}" class="btn btn-info">Borrow</a></td> 		
         		</tr>
     		</tbody>
 		</table>
