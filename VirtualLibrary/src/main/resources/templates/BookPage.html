@@ -26,16 +26,24 @@
     </div>    
 </nav>
 <div style="height: 10px;"></div>
-<form style="text-align: center;" th:action="@{/BookPageType}" method="post">
-	<button type="submit" name="type" value="scifi">Sci-Fi</button>
-    <button type="submit" name="type" value="detective">Detective</button>
-    <button type="submit" name="type" value="comic">Comic</button>
-    <button type="submit" name="type" value="cook">Cookbook</button>
-    <button type="submit" name="type" value="education">Education</button>
-    <button type="submit" name="type" value="history">History</button>
-    <button type="submit" name="type" value="literature">Literature</button>
-    <button type="submit" name="type" value="philosophy">Philosophy</button>
-</form>
+	<form  style="text-align: center;" th:action="@{/BookPageType}" method="post">
+		<button type="submit" name="type" value="scifi">Sci-Fi</button>
+    	<button type="submit" name="type" value="detective">Detective</button>
+    	<button type="submit" name="type" value="comic">Comic</button>
+    	<button type="submit" name="type" value="cook">Cookbook</button>
+    	<button type="submit" name="type" value="education">Education</button>
+    	<button type="submit" name="type" value="history">History</button>
+    	<button type="submit" name="type" value="literature">Literature</button>
+    	<button type="submit" name="type" value="philosophy">Philosophy</button>
+	</form>
+	
+<div style="height: 5px;"></div>
+	
+	<form style="margin: auto; width: 600px" th:action="@{/searchBook}" method="post">
+		<input type="text" name="type" />
+		<button type="submit">Search</button>
+	</form>
+
 <div class="container">
 	<div style="margin: auto; width: 600px" class="row">
 		<table>

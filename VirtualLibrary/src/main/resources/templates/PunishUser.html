@@ -27,26 +27,26 @@
 </nav>
 <div style="height: 10px;"></div>
 <div class="container">
-	<div style="margin: auto; width: 400px" class="row">
-		<div class="row my-1">
-			<a th:href="@{/AddBook}" type="button" class="btn btn-primary btn-lg btn-block">Add Book</a>
-		</div>
-		<div class="row my-1">
-			<a th:href="@{/AddAuthor}" type="button" class="btn btn-primary btn-lg btn-block">Add Author</a>
-		</div>
-		<div class="row my-1">
-			<a th:href="@{/UpdateBook}" type="button" class="btn btn-primary btn-lg btn-block">Update Book</a>
-		</div>
-		<div class="row my-1">
-			<a th:href="@{/UpdateAuthor}" type="button" class="btn btn-primary btn-lg btn-block">Update Author</a>
-		</div>
-		<div class="row my-1">
-			<a th:href="@{/Removal}" type="button" class="btn btn-primary btn-lg btn-block">Remove Book and Author</a>
-		</div>
-		<div class="row my-1">
-			<a th:href="@{/PunishUser}" type="button" class="btn btn-primary btn-lg btn-block">Punish User</a>
-		</div>
-	</div>
+	<form style="margin: auto; width: 450px" class="my-5" th:action="@{/punish}" th:object="${terms}" method="post">
+		<h3 style="color:red">Punish User</h3>
+    	<div class="row my-1">
+    		<div class="col">
+    			<label>User ID:</label>
+    		</div>
+    		<div class="col">
+    			<input type="number" th:field="*{user}"/>
+    		</div>
+    	</div>
+    	<div class="row my-1">
+    		<div class="col">
+    			<label>Cause:</label>
+    		</div>
+    		<div class="col">
+    			<input type="text" th:field="*{cause}"/>
+    		</div>
+    	</div>
+		<button type="submit" class="btn btn-success">Punish</button>
+	</form>
 </div>
 </body>
 </html>

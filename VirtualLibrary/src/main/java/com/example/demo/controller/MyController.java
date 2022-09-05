@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,8 @@ import com.example.demo.bean.Book;
 import com.example.demo.bean.BookRepo;
 import com.example.demo.bean.BookandType;
 import com.example.demo.bean.Register;
+import com.example.demo.bean.TermRepo;
+import com.example.demo.bean.Terms;
 import com.example.demo.bean.User;
 import com.example.demo.bean.UserRepo;
 
@@ -39,6 +43,9 @@ public class MyController {
 	
 	@Autowired
 	private AdminRepo adminrepo;
+	
+	@Autowired
+	private TermRepo termrepo;
 
     @GetMapping("/RegisterPage")
     public String sendForm(Register register,SessionStatus status) {
@@ -73,6 +80,9 @@ public class MyController {
     	    			System.out.println("Succesful login");
     	    			return "AdminPanel";
     				}
+    			}
+    			if(oneblog.getTerm() > 2) {
+    				return "LoginPage";
     			}
     			register.setFirst(oneblog.getFirstname());
     			register.setSecond(oneblog.getLastname());
@@ -287,6 +297,9 @@ public class MyController {
     }
     @GetMapping("/returnBook/{id}")
     public String returnBook(Register register,@PathVariable(name="id")int id) {
+    	if(register.getEmail() == null) {
+    		return "LoginPage";
+    	}
     	List<Book> books = bookrepo.findAll();
     	for(Book book : books) {
     		if(book.getBid() == id) {
@@ -318,5 +331,51 @@ public class MyController {
     public String removeBook(Register register, Book chosen) {
     	bookrepo.deleteById(chosen.getBid());
     	return "AdminPanel";
+    }
+    
+    @GetMapping("/PunishUser")
+    public String punishUser(Register register, Model model) {
+    	if(register.getAdmin() == 0) {
+    		return "LoginPage";
+    	}
+    	model.addAttribute(new Terms());
+    	return "PunishUser";
+    }
+    @PostMapping("/punish")
+    public String punish(Register register, Terms terms) {
+    	if(register.getAdmin() == 0) {
+    		return "LoginPage";
+    	}
+    	LocalDateTime e = LocalDateTime.now();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	String fe = formatter.format(e);
+    	List<User> users = repo.findAll();
+    	for(User user : users) {
+    		if(user.getLid() == terms.getUser()) {
+    			user.setTerm(user.getTerm()+1);
+    			repo.save(user);
+    		}
+    	}
+    	terms.setDate(fe);
+    	terms.setAdmin(register.getLid());
+    	termrepo.save(terms);
+    	return "PunishUser";
+    }
+    @PostMapping("/searchBook")
+    public String getSearchedBook(Register register,Model model,@RequestParam(value="type", required=true) String type) {
+    	if(register.getEmail() == null) {
+    		return "LoginPage";
+    	}
+    	List<BookandType> full = new ArrayList<>();
+    	List<Book> books = bookrepo.findAll();
+    	for(Book book : books) {
+    		if(book.getBorrower() == 0) {
+    			if(book.getName().toLowerCase().contains(type.toLowerCase())) {
+    				full.add(new BookandType(book));
+    			}
+    		}
+    	}
+    	model.addAttribute("books",full);
+    	return "BookPage";
     }
 }
