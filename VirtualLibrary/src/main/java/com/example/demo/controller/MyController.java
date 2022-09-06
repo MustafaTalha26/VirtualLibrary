@@ -22,6 +22,8 @@ import com.example.demo.bean.AuthorRepo;
 import com.example.demo.bean.Book;
 import com.example.demo.bean.BookRepo;
 import com.example.demo.bean.BookandType;
+import com.example.demo.bean.BorrowList;
+import com.example.demo.bean.BorrowRepo;
 import com.example.demo.bean.Register;
 import com.example.demo.bean.TermRepo;
 import com.example.demo.bean.Terms;
@@ -46,6 +48,9 @@ public class MyController {
 	
 	@Autowired
 	private TermRepo termrepo;
+	
+	@Autowired
+	private BorrowRepo borrowrepo;
 
     @GetMapping("/RegisterPage")
     public String sendForm(Register register,SessionStatus status) {
@@ -272,10 +277,14 @@ public class MyController {
     @GetMapping("/borrowBook/{id}")
     public String borrowBook(Register register,@PathVariable(name="id")int id) {
     	List<Book> books = bookrepo.findAll();
+    	LocalDateTime e = LocalDateTime.now();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	String fe = formatter.format(e);
     	for(Book book : books) {
     		if(book.getBid() == id) {
     			book.setBorrower(register.getLid());
     			bookrepo.save(book);
+    			borrowrepo.save(new BorrowList(register.getLid(),book.getBid(),fe,"borrowed"));
     		}
     	}
 		return "Panel";
@@ -300,11 +309,15 @@ public class MyController {
     	if(register.getEmail() == null) {
     		return "LoginPage";
     	}
+    	LocalDateTime e = LocalDateTime.now();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	String fe = formatter.format(e);
     	List<Book> books = bookrepo.findAll();
     	for(Book book : books) {
     		if(book.getBid() == id) {
     			book.setBorrower(0);
     			bookrepo.save(book);
+    			borrowrepo.save(new BorrowList(register.getLid(),book.getBid(),fe,"returned"));
     		}
     	}
 		return "Panel";
@@ -377,5 +390,11 @@ public class MyController {
     	}
     	model.addAttribute("books",full);
     	return "BookPage";
+    }
+    @GetMapping("/BorrowList")
+    public String goToBorrowList(Register register, Model model) {
+    	List<BorrowList> borrowlist = borrowrepo.findAll();
+    	model.addAttribute("borrowlist",borrowlist);
+    	return "BorrowList";
     }
 }

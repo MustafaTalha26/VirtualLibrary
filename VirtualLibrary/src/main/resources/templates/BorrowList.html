@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<head>
+	<meta charset="UTF-8">
+	<title>UserPanel</title>
+</head>
+<body>
+	<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/Panel}">Try out</a>
+            
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a class="nav-link" th:href="@{/RegisterPage}">Register Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/LoginPage}">Login Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/BookPage}">Book Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/AuthorPage}">Author Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/Borrowed}">Borrowed Books</a></li>
+        </ul>
+    </div>    
+</nav>
+<div style="height: 10px;"></div>
+<div class="container">
+	<div style="margin: auto; width: 600px" class="row">
+		<table>
+    		<thead>
+        	<tr>
+            	<th> User ID </th>
+       	     	<th> Book ID </th>
+       	     	<th> Date </th>
+       	     	<th> Action </th>
+       		</tr>
+   			</thead>
+    		<tbody>
+        		<tr th:each="borrow : ${borrowlist}">
+        			<td><span th:text="${borrow.user}"> Book </span></td>
+            		<td><span th:text="${borrow.book}"> Book </span></td>
+            		<td><span th:text="${borrow.date}"> Date </span></td>
+            		<td><span th:text="${borrow.action}"> action </span></td>  
+        		</tr>
+    		</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>
