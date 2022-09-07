@@ -53,25 +53,62 @@ public class MyController {
 	private BorrowRepo borrowrepo;
 
     @GetMapping("/RegisterPage")
-    public String sendForm(Register register,SessionStatus status) {
+    public String sendForm(Register register,SessionStatus status, Model model) {
     	status.setComplete();
+    	List<String> responses = new ArrayList<>();
+    	model.addAttribute("responses",responses);
         return "RegisterPage";
     }
     @PostMapping("/createUser")
-    public String createUser(Register register) {
+    public String createUser(Register register, Model model) {
+    	List<String> responses = new ArrayList<>();
+    	if(register.getFirst().equals("")) {
+    		responses.add("First name can't be empty");
+    	}
+    	if(register.getSecond().equals("")) {
+    		responses.add("Lastname can't be empty");
+    	}
+    	if(register.getEmail().equals("")) {
+    		responses.add("Email can't be empty");
+    	}
+    	if(register.getPhone().equals("")) {
+    		responses.add("Phone can't be empty");
+    	}
+    	if(register.getPassword().equals("")) {
+    		responses.add("Password can't be empty");
+    	}
+    	List<User> users = repo.findAll();
+    	for(User user : users) {
+    		if(user.getEmail().equals(register.getEmail())) {
+    			responses.add("This email already used");
+    		}
+    	}
+    	if(!register.getEmail().contains("@")) {
+    		responses.add("Please enter a valid email address");
+    	}
+    	if(!responses.isEmpty()) {
+    		model.addAttribute("responses", responses);
+    		for(String response : responses) {
+    			System.out.println(response);
+    		}
+    		return "RegisterPage";
+    	}
     	User user = new User(register.getFirst(),register.getSecond(),register.getEmail(),register.getPhone(),register.getPassword(),0);
     	repo.save(user);
     	System.out.println("Succesful register");
     	return "LoginPage";
     }
     @GetMapping("/LoginPage")
-    public String enterLoginPage(Register register) {
+    public String enterLoginPage(Register register, Model model) {
+    	String response = "";
+    	model.addAttribute("response", response);
     	return "LoginPage";
     }
     @PostMapping("/Panel")
-    public String checkLogin(Register register) {
+    public String checkLogin(Register register, Model model) {
     	List<User> userList = repo.findByemail(register.getEmail());
     	List<Admin> admins = adminrepo.findAll();
+    	String response = "";
     	for(User oneblog : userList) {
     		if(oneblog.getPassword().equals(register.getPassword())) {
     			for(Admin admin : admins) {
@@ -98,6 +135,8 @@ public class MyController {
     			return "Panel";
     		}
     	}
+    	response = "Wrong email or password";
+    	model.addAttribute("response", response);
     	System.out.println("Wrong Password");
 		return "LoginPage";
     }
@@ -396,5 +435,9 @@ public class MyController {
     	List<BorrowList> borrowlist = borrowrepo.findAll();
     	model.addAttribute("borrowlist",borrowlist);
     	return "BorrowList";
+    }
+    @GetMapping("/Virtual")
+    public String startWithVirtual() {
+    	return "Virtual";
     }
 }

@@ -53,6 +53,11 @@
     		</div>
     	</div>
     	<button type="submit" class="btn btn-success">Register</button>
+    	<div class="row my-1">
+    		<ul th:each="response : ${responses}">
+   				<li style="color:red" th:text="${response}"></li>
+			</ul>
+    	</div>
 	</form>
 </div>
 
