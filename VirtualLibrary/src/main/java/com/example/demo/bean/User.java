@@ -26,7 +26,6 @@ public class User {
 	}
 	
 	public User(String firstname, String lastname, String email, String phonenumber, String password, int term) {
-		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
@@ -37,7 +36,6 @@ public class User {
 	
 	public User(int lid, String firstname, String lastname, String email, String phonenumber, String password,
 			int term) {
-		super();
 		this.lid = lid;
 		this.firstname = firstname;
 		this.lastname = lastname;

@@ -440,4 +440,91 @@ public class MyController {
     public String startWithVirtual() {
     	return "Virtual";
     }
+    @GetMapping("/ChangeInfo")
+    public String goToChangeUserInfo(Register register, Model model) {
+    	List<String> responses = new ArrayList<>();
+    	if(register.getEmail().equals("")) {
+    		return "LoginPage";
+    	}
+    	model.addAttribute("responses",responses);
+    	model.addAttribute("register", register);
+    	return "ChangeInfo";
+    }
+    @PostMapping("/changeInfoFr")
+    public String ChangeUserInfo(Register register, Model model) {
+    	User user = repo.findById(register.getLid()).orElse(null);
+    	List<String> responses = new ArrayList<>();
+    	if(user.getPassword().equals(register.getPassword())) {
+    		if(!register.getEmail().contains("@")) {
+    			responses.add("Invalid email");
+    		}
+    		if(register.getEmail().contains("@")) {
+    			user = new User(register.getLid(),register.getFirst(),register.getSecond(),register.getEmail(),register.getPhone(),register.getPassword(),register.getTerm());
+            	repo.save(user);
+    		}
+    	}
+    	if(!user.getPassword().equals(register.getPassword())) {
+    		if(!register.getEmail().contains("@")) {
+    			responses.add("Invalid email");
+    		}
+    		register.setEmail(user.getEmail());
+    		register.setFirst(user.getFirstname());
+    		register.setSecond(user.getLastname());
+    		register.setPhone(user.getPhonenumber());
+    		register.setLid(user.getLid());
+    		register.setTerm(user.getTerm());
+    		responses.add("Wrong Password");
+    	}
+    	if(!responses.isEmpty()) {
+    		model.addAttribute("responses", responses);
+    		return "ChangeInfo";
+    	}
+    	return "Panel";
+    }
+    @GetMapping("/ChangePassword")
+    public String goToChangePassword(Register register, Model model) {
+    	List<String> responses = new ArrayList<>();
+    	if(register.getEmail().equals("")) {
+    		return "LoginPage";
+    	}
+    	model.addAttribute("register", register);
+    	model.addAttribute("responses",responses);
+    	return "ChangePassword";
+    }
+    @PostMapping("/changePasswordFr")
+    public String ChangePassword(Register register, Model model) {
+    	List<String> responses = new ArrayList<>();
+    	User user = repo.findById(register.getLid()).orElse(null);
+    	if(!user.getPassword().equals(register.getPassword())) {
+    		responses.add("Wrong Password");
+    		if(!register.getFirst().equals(register.getSecond())) {
+    			responses.add("New Passwords didnt match");
+    		}
+    	}
+    	if(user.getPassword().equals(register.getPassword())) {
+    		if(register.getFirst().equals(register.getSecond())) {
+    			register.setPassword(register.getFirst());
+    			System.out.println("Success");
+    		}
+    		if(!register.getFirst().equals(register.getSecond())) {
+    			responses.add("New Passwords didnt match");
+    		}
+    	}
+		register.setEmail(user.getEmail());
+		register.setFirst(user.getFirstname());
+		register.setSecond(user.getLastname());
+		register.setPhone(user.getPhonenumber());
+		register.setLid(user.getLid());
+		register.setTerm(user.getTerm());
+		if(responses.isEmpty()) {
+			user = new User(register.getLid(),register.getFirst(),register.getSecond(),
+    				register.getEmail(),register.getPhone(),register.getPassword(),register.getTerm());
+        	repo.save(user);
+		}
+		if(!responses.isEmpty()) {
+			model.addAttribute("responses", responses);
+			return "ChangePassword";
+		}
+    	return "Panel";
+    }
 }
