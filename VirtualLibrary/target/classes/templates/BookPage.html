@@ -26,6 +26,11 @@
     </div>    
 </nav>
 <div style="height: 10px;"></div>
+	<div style="text-align: center;" class="row my-1">
+    	<ul th:each="response : ${responses}">
+   			<li style="color:red" th:text="${response}"></li>
+		</ul>
+    </div>
 	<form  style="text-align: center;" th:action="@{/BookPageType}" method="post">
 		<button type="submit" name="type" value="scifi">Sci-Fi</button>
     	<button type="submit" name="type" value="detective">Detective</button>
@@ -45,13 +50,14 @@
 	</form>
 
 <div class="container">
-	<div style="margin: auto; width: 600px" class="row">
+	<div style="margin: auto; width: 800px" class="row">
 		<table>
     		<thead>
         	<tr>
         		<th>  </th>
             	<th> Title </th>
        	     	<th> Page </th>
+       	     	<th> Author </th>
        	     	<th> Type </th>
        		</tr>
    			</thead>
@@ -60,6 +66,7 @@
         			<td><img th:src="${booker.book.image}" width="120" height="160"/></td>
             		<td><span th:text="${booker.book.name}"> Title </span></td>
             		<td><span th:text="${booker.book.page}"> Page </span></td>
+            		<td><span th:text="${booker.author}"> Page </span></td>
             		<td><span th:text="${booker.type}"> Type </span></td>  
             		<td><a th:href="@{'/borrowBook/' + ${booker.book.bid}}" class="btn btn-info">Borrow</a></td> 		
         		</tr>

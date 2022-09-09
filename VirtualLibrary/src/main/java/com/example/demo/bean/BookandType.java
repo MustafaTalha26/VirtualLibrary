@@ -3,6 +3,7 @@ package com.example.demo.bean;
 public class BookandType{
 	private Book book;
 	private String type;
+	private String author;
 	
 	public BookandType() {
 	}
@@ -57,5 +58,11 @@ public class BookandType{
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 }

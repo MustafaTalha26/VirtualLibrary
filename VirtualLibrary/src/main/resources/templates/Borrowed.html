@@ -27,13 +27,14 @@
 </nav>
 <div style="height: 10px;"></div>
 <div class="container">
-	<div style="margin: auto; width: 600px" class="row">
+	<div style="margin: auto; width: 800px" class="row">
 		<table>
     		<thead>
         	<tr>
         		<th>  </th>
             	<th> Title </th>
        	     	<th> Page </th>
+       	     	<th> Author </th>
        	     	<th> Type </th>
        		</tr>
    			</thead>
@@ -42,6 +43,7 @@
         			<td><img th:src="${booker.book.image}" width="120" height="160"/></td>
             		<td><span th:text="${booker.book.name}"> Title </span></td>
             		<td><span th:text="${booker.book.page}"> Page </span></td>
+            		<td><span th:text="${booker.author}"> Page </span></td>
             		<td><span th:text="${booker.type}"> Type </span></td>  
             		<td><a th:href="@{'/returnBook/' + ${booker.book.bid}}" class="btn btn-info">Return</a></td> 		
         		</tr>

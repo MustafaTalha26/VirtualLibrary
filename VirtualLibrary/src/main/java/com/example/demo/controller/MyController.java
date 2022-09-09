@@ -124,6 +124,8 @@ public class MyController {
     				}
     			}
     			if(oneblog.getTerm() > 2) {
+    				response = "Your account terminated";
+    				model.addAttribute("response", response);
     				return "LoginPage";
     			}
     			register.setFirst(oneblog.getFirstname());
@@ -161,10 +163,18 @@ public class MyController {
     	}
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
+    	List<Author> authors = autrepo.findAll();
     	for(Book book : books) {
     		if(book.getBorrower() == 0) {
     			full.add(new BookandType(book));
     		}
+    	}
+    	for(BookandType bk : full) {
+    		for(Author author : authors) {
+        		if(bk.getBook().getAid() == author.getAid()) {
+        			bk.setAuthor(author.getName());
+        		}
+        	}
     	}
     	model.addAttribute("books",full);
     	return "BookPage";
@@ -177,6 +187,7 @@ public class MyController {
     	}
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
+    	List<Author> authors = autrepo.findAll();
     	for(Book book : books) {
     		if(book.getBorrower() == 0) {
     			if(book.getScifi() == 1 && type.equals("scifi")) {
@@ -204,6 +215,13 @@ public class MyController {
         			full.add(new BookandType(book));
         		}
     		}
+    	}
+    	for(BookandType bk : full) {
+    		for(Author author : authors) {
+        		if(bk.getBook().getAid() == author.getAid()) {
+        			bk.setAuthor(author.getName());
+        		}
+        	}
     	}
     	model.addAttribute("books",full);
     	return "BookPage";
@@ -238,11 +256,11 @@ public class MyController {
     	}
     }
     @PostMapping("/addBookFr")
-    public String createBook(Register register,Book book) {
+    public String createBook(Register register,Book book,Model model) {
     	if(register.getAdmin() == 1) {
     		bookrepo.save(book);
         	System.out.println("Succesfully added");
-    		return "BookPage";
+    		return getBookPage(register, model);
     	}
     	else {
     		return "LoginPage";
@@ -259,11 +277,11 @@ public class MyController {
     	}
     }
     @PostMapping("/addAuthorFr")
-    public String createAuthor(Register register,Author author) {
+    public String createAuthor(Register register,Author author,Model model) {
     	if(register.getAdmin() == 1) {
     		autrepo.save(author);
         	System.out.println("Succesfully added");
-    		return "AuthorPage";
+    		return getAutPage(register, model);
     	}
     	else {
     		return "LoginPage";
@@ -281,11 +299,11 @@ public class MyController {
     	}
     }
     @PostMapping("/updateBookFr")
-    public String updateBook(Register register,Book book,Book chosen) {
+    public String updateBook(Register register,Book book,Book chosen,Model model) {
     	if(register.getAdmin() == 1) {
     		book.setBid(chosen.getBid());
     		bookrepo.save(book);
-    		return "BookPage";
+    		return getBookPage(register, model);
     	}
     	else {
     		return "LoginPage";
@@ -303,19 +321,31 @@ public class MyController {
     	}
     }
     @PostMapping("/updateAuthorFr")
-    public String updateAuthor(Register register,Author author,Author chosen) {
+    public String updateAuthor(Register register,Author author,Author chosen,Model model) {
     	if(register.getAdmin() == 1) {
     		author.setAid(chosen.getAid());
     		autrepo.save(author);
-    		return "AuthorPage";
+    		return getAutPage(register, model);
     	}
     	else {
     		return "LoginPage";
     	}
     }
     @GetMapping("/borrowBook/{id}")
-    public String borrowBook(Register register,@PathVariable(name="id")int id) {
+    public String borrowBook(Register register,@PathVariable(name="id")int id, Model model) {
     	List<Book> books = bookrepo.findAll();
+    	int number = 0;
+    	List<String> responses = new ArrayList<>();
+    	for(Book book : books) {
+    		if(book.getBorrower() == register.getLid()) {
+    			number++;
+    		}
+    	}
+    	if(number > 1) {
+    		responses.add("You can't borrow more than 2 books.");
+    		model.addAttribute("responses", responses);
+    		return getBookPage(register, model);
+    	}
     	LocalDateTime e = LocalDateTime.now();
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     	String fe = formatter.format(e);
@@ -335,10 +365,18 @@ public class MyController {
     	}
     	List<Book> books = bookrepo.findAll();
     	List<BookandType> full = new ArrayList<>();
+    	List<Author> authors = autrepo.findAll();
     	for(Book book : books) {
     		if(book.getBorrower() == register.getLid()) {
     			full.add(new BookandType(book));
     		}
+    	}
+    	for(BookandType bk : full) {
+    		for(Author author : authors) {
+        		if(bk.getBook().getAid() == author.getAid()) {
+        			bk.setAuthor(author.getName());
+        		}
+        	}
     	}
     	model.addAttribute("books",full);
     	return "Borrowed";
@@ -420,12 +458,20 @@ public class MyController {
     	}
     	List<BookandType> full = new ArrayList<>();
     	List<Book> books = bookrepo.findAll();
+    	List<Author> authors = autrepo.findAll();
     	for(Book book : books) {
     		if(book.getBorrower() == 0) {
     			if(book.getName().toLowerCase().contains(type.toLowerCase())) {
     				full.add(new BookandType(book));
     			}
     		}
+    	}
+    	for(BookandType bk : full) {
+    		for(Author author : authors) {
+        		if(bk.getBook().getAid() == author.getAid()) {
+        			bk.setAuthor(author.getName());
+        		}
+        	}
     	}
     	model.addAttribute("books",full);
     	return "BookPage";
