@@ -38,11 +38,12 @@
        		</tr>
    			</thead>
     		<tbody>
-        		<tr th:each="book : ${auths}">
-        			<td><img th:src="${book.photo}" width="120" height="160"/></td>
-            		<td><span th:text="${book.name}"> Title </span></td>
-            		<td><span th:text="${book.birth}"> Born </span></td>
-            		<td><span th:text="${book.death}"> Died </span></td>
+        		<tr th:each="aut : ${auths}">
+        			<td><img th:src="${aut.photo}" width="120" height="160"/></td>
+            		<td><span th:text="${aut.name}"> Title </span></td>
+            		<td><span th:text="${aut.birth}"> Born </span></td>
+            		<td><span th:text="${aut.death}"> Died </span></td>
+            		<td><a th:href="@{'/showBook/' + ${aut.aid}}" class="btn btn-info">Show Books</a></td> 
         		</tr>
     		</tbody>
 		</table>

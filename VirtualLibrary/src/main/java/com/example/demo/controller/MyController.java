@@ -478,6 +478,9 @@ public class MyController {
     }
     @GetMapping("/BorrowList")
     public String goToBorrowList(Register register, Model model) {
+    	if(register.getAdmin() == 0) {
+    		return "LoginPage";
+    	}
     	List<BorrowList> borrowlist = borrowrepo.findAll();
     	model.addAttribute("borrowlist",borrowlist);
     	return "BorrowList";
@@ -572,5 +575,48 @@ public class MyController {
 			return "ChangePassword";
 		}
     	return "Panel";
+    }
+    @GetMapping("/showBook/{id}")
+    public String showBook(Register register,@PathVariable(name="id")int id, Model model) {
+    	if(register.getEmail().equals("")) {
+    		return "LoginPage";
+    	}
+    	List<String> responses = new ArrayList<>();
+    	List<BookandType> full = new ArrayList<>();
+    	List<Book> books = bookrepo.findAll();
+    	List<Author> authors = autrepo.findAll();
+    	for(Book book : books) {
+    		if(book.getBorrower() == 0 && book.getAid() == id) {
+    			full.add(new BookandType(book));
+    		}
+    	}
+    	for(BookandType bk : full) {
+    		for(Author author : authors) {
+        		if(bk.getBook().getAid() == author.getAid()) {
+        			bk.setAuthor(author.getName());
+        		}
+        	}
+    	}
+    	if(full.isEmpty()) {
+    		responses.add("Couldn't find any books");
+    		model.addAttribute("responses", responses);
+    	}
+    	model.addAttribute("books",full);
+		return "BookPage";
+    }
+    @GetMapping("/AccountHistory")
+    public String goToAccountHistory(Register register, Model model) {
+    	if(register.getEmail().equals("")) {
+    		return "LoginPage";
+    	}
+    	List<BorrowList> history = new ArrayList<>();
+    	List<BorrowList> borrowlist = borrowrepo.findAll();
+    	for(BorrowList bl : borrowlist) {
+    		if(bl.getUser() == register.getLid()) {
+    			history.add(bl);
+    		}
+    	}
+    	model.addAttribute("borrowlist",history);
+    	return "AccountHistory";
     }
 }
