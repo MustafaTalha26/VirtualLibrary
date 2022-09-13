@@ -24,6 +24,8 @@ import com.example.demo.bean.BookRepo;
 import com.example.demo.bean.BookandType;
 import com.example.demo.bean.BorrowList;
 import com.example.demo.bean.BorrowRepo;
+import com.example.demo.bean.Feedback;
+import com.example.demo.bean.FeedbackRepo;
 import com.example.demo.bean.Register;
 import com.example.demo.bean.TermRepo;
 import com.example.demo.bean.Terms;
@@ -51,6 +53,9 @@ public class MyController {
 	
 	@Autowired
 	private BorrowRepo borrowrepo;
+	
+	@Autowired
+	private FeedbackRepo feedrepo;
 
     @GetMapping("/RegisterPage")
     public String sendForm(Register register,SessionStatus status, Model model) {
@@ -618,5 +623,23 @@ public class MyController {
     	}
     	model.addAttribute("borrowlist",history);
     	return "AccountHistory";
+    }
+    @GetMapping("/Feedback")
+    public String goToFeedback(Model model) {
+    	model.addAttribute(new Feedback());
+    	return "Feedback";
+    }
+    @PostMapping("/sendFeedback")
+    public String sendFeedback(Feedback feedback,Model model) {
+    	String response = "";
+    	if(!feedback.getEmail().equals("")) {
+    		feedrepo.save(feedback);
+    		response = "Successfully sended";
+    	}
+    	else {
+    		response = "Email can't be empty";
+    	}
+    	model.addAttribute("response", response);
+    	return "Feedback";
     }
 }
