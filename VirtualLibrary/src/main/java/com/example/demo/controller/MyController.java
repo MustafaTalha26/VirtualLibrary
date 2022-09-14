@@ -497,7 +497,7 @@ public class MyController {
     @GetMapping("/ChangeInfo")
     public String goToChangeUserInfo(Register register, Model model) {
     	List<String> responses = new ArrayList<>();
-    	if(register.getEmail().equals("")) {
+    	if(register.getEmail() == null) {
     		return "LoginPage";
     	}
     	model.addAttribute("responses",responses);
@@ -538,7 +538,7 @@ public class MyController {
     @GetMapping("/ChangePassword")
     public String goToChangePassword(Register register, Model model) {
     	List<String> responses = new ArrayList<>();
-    	if(register.getEmail().equals("")) {
+    	if(register.getEmail() == null) {
     		return "LoginPage";
     	}
     	model.addAttribute("register", register);
@@ -583,7 +583,7 @@ public class MyController {
     }
     @GetMapping("/showBook/{id}")
     public String showBook(Register register,@PathVariable(name="id")int id, Model model) {
-    	if(register.getEmail().equals("")) {
+    	if(register.getEmail() == null) {
     		return "LoginPage";
     	}
     	List<String> responses = new ArrayList<>();
@@ -611,7 +611,7 @@ public class MyController {
     }
     @GetMapping("/AccountHistory")
     public String goToAccountHistory(Register register, Model model) {
-    	if(register.getEmail().equals("")) {
+    	if(register.getEmail() == null) {
     		return "LoginPage";
     	}
     	List<BorrowList> history = new ArrayList<>();
@@ -632,14 +632,80 @@ public class MyController {
     @PostMapping("/sendFeedback")
     public String sendFeedback(Feedback feedback,Model model) {
     	String response = "";
-    	if(!feedback.getEmail().equals("")) {
-    		feedrepo.save(feedback);
-    		response = "Successfully sended";
-    	}
-    	else {
+    	if(feedback.getEmail().equals("")) {
     		response = "Email can't be empty";
+    	}
+    	if(!feedback.getEmail().equals("")) {
+    		if(!feedback.getEmail().contains("@")) {
+        		response = "Please enter a valid email address";
+        	}
+    		if(feedback.getEmail().contains("@")) {
+    			feedrepo.save(feedback);
+        		response = "Successfully sended";
+        	}
     	}
     	model.addAttribute("response", response);
     	return "Feedback";
+    }
+    @GetMapping("/ShowFeedback")
+    public String getFeedbacks(Register register,Model model) {
+    	if(register.getAdmin() == 0) {
+    		return "LoginPage";
+    	}
+    	List<Feedback> feedbacks = feedrepo.findAll();
+    	model.addAttribute("feedbacks", feedbacks);
+    	return "ShowFeedback";
+    }
+    @GetMapping("/Statistics")
+    public String goToStatistics(Register register,Model model) {
+    	if(register.getEmail() == null) {
+    		return "LoginPage";
+    	}
+    	List<String> stats = new ArrayList<>();
+    	if(register.getAdmin() == 1) {
+    		List<User> users = repo.findAll();
+    		List<Book> books = bookrepo.findAll();
+    		List<Author> authors = autrepo.findAll(); 
+    		int banishedusers = 0;
+    		int avabooks = 0;
+    		stats.add("Amount of Users: "+Long.toString(repo.count()));
+    		for(User user : users) {
+    			if(user.getTerm() > 2) {
+    				banishedusers++;
+    			}
+    		}
+    		stats.add("Amount of Banished Users: "+Integer.toString(banishedusers));
+    		stats.add("Amount of Books: "+Long.toString(bookrepo.count()));
+    		for(Book book : books) {
+    			if(book.getBorrower() == 0) {
+    				avabooks++;
+    			}
+    		}
+    		stats.add("Amount of Available Books: "+Integer.toString(avabooks));
+    		stats.add("Amount of Authors: "+Long.toString(autrepo.count()));
+    	}
+    	if(register.getAdmin() == 0) {
+    		List<Book> books = bookrepo.findAll();
+    		List<BorrowList> bwlist = borrowrepo.findAll();
+    		int avabooks = 0;
+    		int amountofborrow = 0;
+    		stats.add("Amount of Users: "+Long.toString(repo.count()));
+    		stats.add("Amount of Books: "+Long.toString(bookrepo.count()));
+    		for(Book book : books) {
+    			if(book.getBorrower() == 0) {
+    				avabooks++;
+    			}
+    		}
+    		stats.add("Amount of Available Books: "+Integer.toString(avabooks));
+    		stats.add("Amount of Authors: "+Long.toString(autrepo.count()));
+    		for(BorrowList bw : bwlist) {
+    			if(bw.getUser() == register.getLid()) {
+    				amountofborrow++;
+    			}
+    		}
+    		stats.add("Amount of Borrowed Books: "+Integer.toString(amountofborrow));
+    	}
+    	model.addAttribute("stats", stats);
+    	return "Statistics";
     }
 }
