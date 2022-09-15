@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<head>
+    <title>UserPanel</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/Virtual}">Home</a>
+            
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a class="nav-link" th:href="@{/BookPage}">Book Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/AuthorPage}">Author Page</a></li>
+            
+            <li><a class="nav-link" th:href="@{/Borrowed}">Borrowed Books</a></li>
+            
+            <li><a class="nav-link" th:href="@{/Panel}">Panel</a></li>
+            
+            <li><a class="nav-link" th:href="@{/LoginPage}">Close</a></li>
+        </ul>
+    </div>    
+</nav>
+<div style="height: 10px;"></div>
+<div class="container">
+	<form style="margin: auto; width: 450px" class="my-5" th:action="@{/showUser}" th:object="${user}" method="post">
+    	<h3 style="color:red">Show user</h3>
+    	<div class="row my-1">
+    	<select class="form-control selectpicker"  th:field="*{lid}" id="lid">
+    		<option th:value="${default}">Choose a user</option>
+    		<option th:each="chosen : ${users}" th:value="${chosen.lid}" th:text="${chosen.firstname} + ' ' + ${chosen.lastname}"></option>
+		</select>
+		</div>
+		<button type="submit" class="btn btn-success">Show</button>
+	</form>
+	<div style="height: 2px;"></div>
+	<div style="margin: auto; width: 450px" class="row">
+		<div class="row my-1">
+			<p class="col">First Name:</p>
+			<p class="col" th:text="${ch.firstname}"></p>
+		</div>
+		<div class="row my-1">
+			<p class="col">Second Name:</p>
+			<p class="col" th:text="${ch.lastname}"></p>
+		</div>
+		<div class="row my-1">
+			<p class="col">ID:</p>
+			<p class="col" th:text="${ch.lid}"></p>
+		</div>
+		<div class="row my-1">
+			<p class="col">Email:</p>
+			<p class="col" th:text="${ch.email}"></p>
+		</div>
+		<div class="row my-1">
+			<p class="col">PhoneNumber:</p>
+			<p class="col" th:text="${ch.phonenumber}"></p>
+		</div>
+		<div class="row my-1">
+			<p class="col">Password:</p>
+			<p class="col" th:text="${ch.password}"></p>
+		</div>
+		<div class="row my-1">
+			<p class="col">Term:</p>
+			<p class="col" th:text="${ch.term}"></p>
+		</div>
+	</div>
+	</div>
+</body>
+</html>

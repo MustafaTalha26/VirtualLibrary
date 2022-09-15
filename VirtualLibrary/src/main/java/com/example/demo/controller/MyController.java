@@ -3,7 +3,9 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -665,7 +667,6 @@ public class MyController {
     	if(register.getAdmin() == 1) {
     		List<User> users = repo.findAll();
     		List<Book> books = bookrepo.findAll();
-    		List<Author> authors = autrepo.findAll(); 
     		int banishedusers = 0;
     		int avabooks = 0;
     		stats.add("Amount of Users: "+Long.toString(repo.count()));
@@ -705,7 +706,51 @@ public class MyController {
     		}
     		stats.add("Amount of Borrowed Books: "+Integer.toString(amountofborrow));
     	}
+    	List<BorrowList> bwlist = borrowrepo.findAll();
+    	int[] mostbooks = new int[(int) repo.count() + 1];
+    	int idofmost = 0;
+    	int amountofmost = 0;
+    	for(int x = 0; x < mostbooks.length; x++) {
+    		mostbooks[x] = 0;
+    	}
+    	for(BorrowList bw : bwlist) {
+    		mostbooks[bw.getUser()]++;
+    	}
+    	
+    	for(int x = 1; x < mostbooks.length; x++) {
+    		if(mostbooks[x] > amountofmost) {
+    			amountofmost = mostbooks[x];
+    			idofmost = x;
+    		}
+    	}
+    	User user = repo.findById(idofmost).orElse(null);
+    	stats.add("Person who read most books: " + user.getFirstname() + " " + user.getLastname());
+    	stats.add("Amount of books read by " + user.getFirstname() +": " +amountofmost);
     	model.addAttribute("stats", stats);
     	return "Statistics";
+    }
+    @GetMapping("/ShowUser")
+    public String ShowUser(Register register,Model model) {
+    	if(register.getAdmin() == 0) {
+    		return "LoginPage";
+    	}
+    	model.addAttribute("users", repo.findAll());
+    	model.addAttribute("user", new User());
+    	User user = repo.findById(register.getLid()).orElse(null);
+    	model.addAttribute("ch", user);
+    	model.addAttribute("default", register.getLid());
+    	return "ShowUser";
+    }
+    @PostMapping("/showUser")
+    public String GetUser(Register register,Model model,User chosen) {
+    	if(register.getAdmin() == 0) {
+    		return "LoginPage";
+    	}
+    	model.addAttribute("users", repo.findAll());
+    	model.addAttribute("user", new User());
+    	User user = repo.findById(chosen.getLid()).orElse(null);
+    	model.addAttribute("ch", user);
+    	model.addAttribute("default", register.getLid());
+    	return "ShowUser";
     }
 }
