@@ -140,6 +140,7 @@ public class MyController {
     			register.setPhone(oneblog.getPhonenumber());
     			register.setTerm(oneblog.getTerm());
     			register.setLid(oneblog.getLid());
+    			register.setAdmin(0);
     			System.out.println("Succesful login");
     			return "Panel";
     		}
