@@ -724,6 +724,7 @@ public class MyController {
     			idofmost = x;
     		}
     	}
+    	amountofmost = amountofmost/2;
     	User user = repo.findById(idofmost).orElse(null);
     	stats.add("Person who read most books: " + user.getFirstname() + " " + user.getLastname());
     	stats.add("Amount of books read by " + user.getFirstname() +": " +amountofmost);
